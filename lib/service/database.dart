@@ -8,4 +8,11 @@ return await FirebaseFirestore.instance.collection("Employee").doc(id).set(emplo
   Future<Stream<QuerySnapshot>>getEmployeeDetails()async{
     return await FirebaseFirestore.instance.collection("Employee").snapshots();
   }
+  Future updateEmployeeDetail(String id,Map<String,dynamic>updateInfo)async{
+    return await FirebaseFirestore.instance.collection("Employee").doc(id).update(updateInfo);
+  }
+
+  Future deleteEmployeeDetail(String id)async{
+    return await FirebaseFirestore.instance.collection("Employee").doc(id).delete();
+  }
 }
