@@ -12,201 +12,258 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-   TextEditingController namecontroller=new TextEditingController();
-  TextEditingController agecontroller=new TextEditingController();
-  TextEditingController locationcontroller=new TextEditingController();
+  TextEditingController namecontroller = new TextEditingController();
+  TextEditingController agecontroller = new TextEditingController();
+  TextEditingController locationcontroller = new TextEditingController();
 
-Stream? EmployeeStream;
-getontheload()async{
-  EmployeeStream=await DatabaseMethods().getEmployeeDetails();
-  setState(() {
-    
-  });
-}
+  Stream? EmployeeStream;
+  getontheload() async {
+    EmployeeStream = await DatabaseMethods().getEmployeeDetails();
+    setState(() {});
+  }
 
-@override
-  void initState(){
+  @override
+  void initState() {
     getontheload();
     super.initState();
   }
 
-Widget allEmployeeDetails(){
-  return StreamBuilder(
-   stream:EmployeeStream, builder: (context,AsyncSnapshot snapshot){
-    return snapshot.hasData? 
-    ListView.builder(
-     itemCount: snapshot.data.docs.length, itemBuilder: (context,Index){
-      DocumentSnapshot ds=snapshot.data.docs[Index];
-      return Container(
-        margin:EdgeInsets.only(bottom:30.0),
-        child: Material(
-              elevation: 5.0,
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                padding: EdgeInsets.all(30),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  
-                 crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(
-                    
-                    
-                    children: [
-                      Text("Name:"+ds["Name"],style:TextStyle(color: Colors.blue, fontSize: 20.0,fontWeight: FontWeight.bold)),
-                      Spacer(),
-                      GestureDetector(
-                       onTap: (){
-                        namecontroller.text=ds["Name"];
-                        agecontroller.text=ds["Age"];
-                        locationcontroller.text=ds["Location"];
-                        EditEmployeeDetail(ds["Id"]);
-                       }, child: Icon(Icons.edit,color:Colors.orange,)),
-                       SizedBox(width: 20.0,),
-                       GestureDetector(
-                       onTap: ()async{
-                        await DatabaseMethods().deleteEmployeeDetail(ds["Id"]);
+  Widget allEmployeeDetails() {
+    return StreamBuilder(
+        stream: EmployeeStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: (context, Index) {
+                    DocumentSnapshot ds = snapshot.data.docs[Index];
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 30.0),
+                      child: Material(
+                        elevation: 5.0,
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: EdgeInsets.all(30),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Name:" + ds["Name"],
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold)),
+                                  Spacer(),
+                                  GestureDetector(
+                                      onTap: () {
+                                        namecontroller.text = ds["Name"];
+                                        agecontroller.text = ds["Age"];
+                                        locationcontroller.text =
+                                            ds["Location"];
+                                        EditEmployeeDetail(ds["Id"]);
+                                      },
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.orange,
+                                      )),
+                                  SizedBox(
+                                    width: 20.0,
+                                  ),
+                                  GestureDetector(
+                                      onTap: () async {
+                                        await DatabaseMethods()
+                                            .deleteEmployeeDetail(ds["Id"]);
+                                      },
+                                      child: Icon(Icons.delete,
+                                          color: Colors.orange))
+                                ],
+                              ),
+                              Text("Age:" + ds["Age"],
+                                  style: TextStyle(
+                                      color: Colors.yellow,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold)),
+                              Text("Location:" + ds["Location"],
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold))
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : Container();
+        });
+  }
 
-                       }, child: Icon(Icons.delete,color:Colors.orange))
-
-                    ],
-                    
-                  ),
-                  
-                  
-                  
-                  Text("Age:"+ds["Age"],style:TextStyle(color: Colors.yellow, fontSize: 20.0,fontWeight: FontWeight.bold)),
-                  Text("Location:"+ds["Location"],style:TextStyle(color: Colors.blue, fontSize: 20.0,fontWeight: FontWeight.bold))
-                ],),
-              ),
-            ),
-      );
-      
-    }):Container();
-  });
-}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder:(context)=>Employee()));
-      },child: Icon(Icons.add),),
-      appBar: AppBar(title: Row(
-        mainAxisAlignment: MainAxisAlignment.center, children: [
-           Text(
-          "Employee",
-          style: TextStyle(color:Colors.blue,
-          fontSize: 50.0,
-          fontWeight: FontWeight.bold),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Employee()));
+          },
+          child: Icon(Icons.add),
+        ),
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Employee",
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 50.0,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Details",
+                style: TextStyle(
+                    color: Colors.yellow,
+                    fontSize: 50.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-          
-          Text(
-          "Details",
-          style: TextStyle(
-          color:Colors.yellow,
-          fontSize: 50.0,
-          fontWeight: FontWeight.bold),
+        ),
+        body: Container(
+          margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 40.0),
+          child: Column(
+            children: [Expanded(child: allEmployeeDetails())],
           ),
-          
-        
-      ],),),
-      body:Container(
-        margin:EdgeInsets.only(left:30.0,right: 30.0,top: 40.0),
-        child: Column(children: [
-          Expanded(child: allEmployeeDetails())
-        ],),
-      )
-    );
+        ));
   }
-  Future EditEmployeeDetail(String id)=>showDialog(context: context, builder: (context)=>AlertDialog(
-    content: Container(
-      child:Column(
-       crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          GestureDetector(
-           onTap: (){
-            Navigator.pop(context);
-           }, child: Icon(Icons.cancel)),
-           SizedBox(width:70.0),
-           Text(
-          "Edit",
-          style: TextStyle(color:Colors.blue,
-          fontSize: 50.0,
-          fontWeight: FontWeight.bold),
-          ),
-          
-          Text(
-          "Details",
-          style: TextStyle(
-          color:Colors.yellow,
-          fontSize: 50.0,
-          fontWeight: FontWeight.bold),
-          ),
-        ],),SizedBox(height: 20.0,),
 
-        Text("Name",style: TextStyle(color: Colors.black,fontSize: 20.0,fontWeight: FontWeight.bold),),
-        SizedBox(height: 20.0,),
-        Container(
-          padding: EdgeInsets.only(left: 15.0),
-          decoration: BoxDecoration(
-            border: Border.all(),borderRadius: BorderRadius.circular(20)
-          ),
-          child: TextField(
-            controller: namecontroller,
-            decoration: InputDecoration(border: InputBorder.none),
-
-          ),
-
-        ),
-        SizedBox(height:30.0),
-        Text("Age",style: TextStyle(color: Colors.black,fontSize: 20.0,fontWeight: FontWeight.bold),),
-        SizedBox(height: 20.0,),
-        Container(
-          padding: EdgeInsets.only(left: 15.0),
-          decoration: BoxDecoration(
-            border: Border.all(),borderRadius: BorderRadius.circular(20)
-          ),
-          child: TextField(
-            controller: agecontroller,
-            decoration: InputDecoration(border: InputBorder.none),
-
-          ),
-
-        ),
-        SizedBox(height: 20.0,),
-        Text("Location",style: TextStyle(color: Colors.black,fontSize: 20.0,fontWeight: FontWeight.bold),),
-        SizedBox(height: 20.0,),
-        Container(
-          padding: EdgeInsets.only(left: 15.0),
-          decoration: BoxDecoration(
-            border: Border.all(),borderRadius: BorderRadius.circular(20)
-          ),
-          child: TextField(
-            controller: locationcontroller,
-            decoration: InputDecoration(border: InputBorder.none),
-
-          ),
-
-          
-
-        ),
-        SizedBox(height: 50.0,),
-        Center(child: ElevatedButton(onPressed: ()async{
-          Map<String,dynamic>updateInfo={
-            "Name":namecontroller.text,
-            "Age":agecontroller.text,
-            "Id":id,
-            "Location":locationcontroller.text
-          };
-          await DatabaseMethods().updateEmployeeDetail(id, updateInfo).then((value){
-            Navigator.pop(context);
-          });
-        },child: Text("Update", selectionColor: Colors.black,style:TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold)),))
-      ],)
-    ),
-    
-  ));
-
-
-  
+  Future EditEmployeeDetail(String id) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.cancel)),
+                    SizedBox(width: 70.0),
+                    Text(
+                      "Edit",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Details",
+                      style: TextStyle(
+                          color: Colors.yellow,
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  "Name",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 15.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextField(
+                    controller: namecontroller,
+                    decoration: InputDecoration(border: InputBorder.none),
+                  ),
+                ),
+                SizedBox(height: 30.0),
+                Text(
+                  "Age",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 15.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextField(
+                    controller: agecontroller,
+                    decoration: InputDecoration(border: InputBorder.none),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  "Location",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 15.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextField(
+                    controller: locationcontroller,
+                    decoration: InputDecoration(border: InputBorder.none),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Center(
+                    child: ElevatedButton(
+                  onPressed: () async {
+                    Map<String, dynamic> updateInfo = {
+                      "Name": namecontroller.text,
+                      "Age": agecontroller.text,
+                      "Id": id,
+                      "Location": locationcontroller.text
+                    };
+                    await DatabaseMethods()
+                        .updateEmployeeDetail(id, updateInfo)
+                        .then((value) {
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text("Update",
+                      selectionColor: Colors.black,
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold)),
+                ))
+              ],
+            )),
+          ));
 }
