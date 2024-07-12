@@ -42,9 +42,11 @@ dependencies:
   fake_cloud_firestore: ^3.0.1
 
 dev_dependencies:
-  flutter_test:
+  flutter_driver: 
     sdk: flutter
-    mockito: ^5.4.4
+  test: 
+  mockito: ^5.4.4
+  
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

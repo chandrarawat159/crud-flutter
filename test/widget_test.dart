@@ -11,8 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_crud/firebase_options.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_crud/main.dart';
-
+import 'package:flutter_crud/main.dart';  
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
