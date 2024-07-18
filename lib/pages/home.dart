@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_crud/pages/employee.dart';
 import 'package:flutter_crud/service/database.dart';
+import 'package:flutter_crud/pages/employee.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,6 +12,47 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  void _update() {
+    if (formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(formKey.currentContext!).showSnackBar(
+          const SnackBar(content: Text('Add Employee Successfully')));
+    }
+  }
+
+  String? _validateName(value) {
+    if (value!.isEmpty) {
+      return 'Please enter your Name';
+    }
+    RegExp nameRegExp = RegExp(r'^[a-z A-Z]+$');
+    if (!nameRegExp.hasMatch(value)) {
+      return 'Please enter a valid Name';
+    }
+    return null;
+  }
+
+  String? _validateAge(value) {
+    if (value!.isEmpty) {
+      return 'Please enter your Age';
+    }
+    RegExp ageRegExp = RegExp(r'^(1[89]|[2-9]\d|\d{3,})$');
+    if (!ageRegExp.hasMatch(value)) {
+      return 'Please enter a valid Age';
+    }
+    return null;
+  }
+
+  String? _validatelocation(value) {
+    if (value!.isEmpty) {
+      return 'Please enter your Location';
+    }
+    RegExp nameRegExp = RegExp(r'^[a-z A-Z]+$');
+    if (!nameRegExp.hasMatch(value)) {
+      return 'Please enter your Location';
+    }
+    return null;
+  }
+
   TextEditingController namecontroller = new TextEditingController();
   TextEditingController agecontroller = new TextEditingController();
   TextEditingController locationcontroller = new TextEditingController();
@@ -46,7 +87,7 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.all(30),
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.blueGrey,
                               borderRadius: BorderRadius.circular(20)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,125 +186,143 @@ class _HomeState extends State<Home> {
   Future EditEmployeeDetail(String id) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            content: Container(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                        onTap: () {
+            content: Form(
+              key: formKey,
+              child: Container(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.cancel)),
+                      SizedBox(width: 70.0),
+                      Text(
+                        "Edit",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 50.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Details",
+                        style: TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 50.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                    "Name",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 15.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: TextFormField(
+                      controller: namecontroller,
+                      decoration: InputDecoration(
+                          labelText: "Enter your Name",
+                          border: InputBorder.none),
+                      validator: _validateName,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                    ),
+                  ),
+                  SizedBox(height: 30.0),
+                  Text(
+                    "Age",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 15.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: TextFormField(
+                      controller: agecontroller,
+                      decoration: InputDecoration(
+                          labelText: "Enter your Location",
+                          border: InputBorder.none),
+                      validator: _validateAge,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    "Location",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 15.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: TextFormField(
+                      controller: locationcontroller,
+                      decoration: InputDecoration(
+                          labelText: "Enter your Age",
+                          border: InputBorder.none),
+                      validator: _validatelocation,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Center(
+                      child: ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        _update();
+                        Map<String, dynamic> updateInfo = {
+                          "Name": namecontroller.text,
+                          "Age": agecontroller.text,
+                          "Id": id,
+                          "Location": locationcontroller.text
+                        };
+                        await DatabaseMethods()
+                            .updateEmployeeDetail(id, updateInfo)
+                            .then((value) {
                           Navigator.pop(context);
-                        },
-                        child: Icon(Icons.cancel)),
-                    SizedBox(width: 70.0),
-                    Text(
-                      "Edit",
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 50.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Details",
-                      style: TextStyle(
-                          color: Colors.yellow,
-                          fontSize: 50.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  "Name",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 15.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: TextField(
-                    controller: namecontroller,
-                    decoration: InputDecoration(border: InputBorder.none),
-                  ),
-                ),
-                SizedBox(height: 30.0),
-                Text(
-                  "Age",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 15.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: TextField(
-                    controller: agecontroller,
-                    decoration: InputDecoration(border: InputBorder.none),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  "Location",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 15.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: TextField(
-                    controller: locationcontroller,
-                    decoration: InputDecoration(border: InputBorder.none),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Center(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    Map<String, dynamic> updateInfo = {
-                      "Name": namecontroller.text,
-                      "Age": agecontroller.text,
-                      "Id": id,
-                      "Location": locationcontroller.text
-                    };
-                    await DatabaseMethods()
-                        .updateEmployeeDetail(id, updateInfo)
-                        .then((value) {
-                      Navigator.pop(context);
-                    });
-                  },
-                  child: Text("Update",
-                      selectionColor: Colors.black,
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold)),
-                ))
-              ],
-            )),
+                        });
+                      }
+                    },
+                    child: Text("Update",
+                        selectionColor: Colors.black,
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  ))
+                ],
+              )),
+            ),
           ));
 }

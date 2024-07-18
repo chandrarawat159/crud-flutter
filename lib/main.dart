@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Widget matApp = MaterialApp(
+    return MaterialApp(
         title: 'Flutter CRUD',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -41,20 +41,6 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: Home());
-    return matApp;
-    /*         
-    return FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return matApp
-          } else {
-            return SizedBox(width: 200, child: Center(child: CircularProgressIndicator()));
-          }
-        });
-        */
   }
 }
 
