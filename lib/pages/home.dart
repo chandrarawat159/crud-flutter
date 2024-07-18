@@ -87,7 +87,7 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.all(30),
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                              color: Colors.blueGrey,
+                              color: Colors.purpleAccent,
                               borderRadius: BorderRadius.circular(20)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
                                 children: [
                                   Text("Name:" + ds["Name"],
                                       style: TextStyle(
-                                          color: Colors.blue,
+                                          color: Colors.white,
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.bold)),
                                   Spacer(),
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
                                       },
                                       child: Icon(
                                         Icons.edit,
-                                        color: Colors.orange,
+                                        color: Colors.lightGreenAccent,
                                       )),
                                   SizedBox(
                                     width: 20.0,
@@ -121,7 +121,7 @@ class _HomeState extends State<Home> {
                                             .deleteEmployeeDetail(ds["Id"]);
                                       },
                                       child: Icon(Icons.delete,
-                                          color: Colors.orange))
+                                          color: Colors.lightGreenAccent))
                                 ],
                               ),
                               Text("Age:" + ds["Age"],
@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
                                       fontWeight: FontWeight.bold)),
                               Text("Location:" + ds["Location"],
                                   style: TextStyle(
-                                      color: Colors.blue,
+                                      color: Colors.white,
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold))
                             ],
